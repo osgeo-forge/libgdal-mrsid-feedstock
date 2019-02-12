@@ -1,0 +1,86 @@
+{% set name = "libgdal-mrsid" %}
+{% set version = "2.4.0" %}
+{% set maj_min_constraint = "2.4.*" %}
+{% set maj_min_ver = "2.4" %}
+{% set mrsid_ver = "9.5.4.4709" %}
+{% set mrsid_ver_constraint = "9.5.4.*" %}
+{% macro recipe_parent() -%}
+  file:///{{ RECIPE_DIR|replace("\\", "/")|urlencode|replace("%3A", ":")|replace("/recipe", "") }}
+{%- endmacro %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  - fn: gdal-{{ version }}-{{ name }}.tar.xz
+    url: http://download.osgeo.org/gdal/{{ version }}/gdal-{{ version }}.tar.xz
+    sha256: c3791dcc6d37e59f6efa86e2df2a55a4485237b0a48e330ae08949f0cdf00f27
+    patches:
+      # Use multiple cores on Windows
+      - patches/0001-multiprocessor.patch  # [win]
+      # Minimal drivers build
+      - patches/0002-minimal-drivers.patch  # [win]
+      # Fix macro redefinition error
+      - patches/0003-cvs-redefinition.patch  # [win]
+      # Fix builds without curl
+      # In master and 2.4 branch: https://github.com/OSGeo/gdal/issues/1251
+      - patches/0004-missing-ogrngw.patch
+  - folder: MrSID_DSDK
+    url: {{ recipe_parent() }}/archive/MrSID_DSDK-{{ mrsid_ver }}-win64-vc14.zip
+    sha256: f49954f43bfe4dcd69487085c58184ddb75d8590c41f826f3427421f30131d00
+
+build:
+  number: 1000
+  # For now...
+  skip: True  # [not win]
+
+requirements:
+  build:
+    - m2-patch  # [win]
+    - pkg-config >=0.21  # [not win]
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - tbb
+    # External libs needed for minimal drivers build
+    - geos
+    - geotiff
+    - jpeg
+    - libiconv
+    - libpng
+    - libtiff
+    - libuuid  # [linux]
+    - proj4
+  run:
+    - libgdal {{ maj_min_constraint }}
+    - mrsid-sdk {{ mrsid_ver_constraint }}
+
+test:
+  files:
+    - meg_cr20.sid
+    - Tetons_200k.xyz.sid
+  commands:
+    - if not exist %LIBRARY_LIB%\\gdalplugins\\{{ maj_min_ver }}\\gdal_MrSID.dll exit 1  # [win]
+    - if not exist %LIBRARY_LIB%\\gdalplugins\\{{ maj_min_ver }}\\gdal_MG4Lidar.dll exit 1  # [win]
+    - gdalinfo --format MrSID
+    - gdalinfo --format MG4Lidar
+    - gdalinfo --format JP2MrSID
+    - gdalinfo meg_cr20.sid
+    - gdalinfo Tetons_200k.xyz.sid
+
+about:
+  home: http://www.gdal.org
+  license: MIT
+  license_file: LICENSE.TXT
+  summary: MrSID plugin for GDAL/OGR
+  description: |
+    GDAL is a translator library for raster and vector geospatial data formats
+    that is released under an X/MIT style Open Source license by the Open
+    Source Geospatial Foundation.
+  doc_url: https://www.gdal.org/frmt_mrsid.html
+  dev_url: https://github.com/OSGeo/gdal/tree/master/gdal/ogr/ogrsf_frmts/filegdb
+
+extra:
+  recipe-maintainers:
+    - dakcarto

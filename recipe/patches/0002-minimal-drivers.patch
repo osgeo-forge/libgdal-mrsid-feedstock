@@ -1,0 +1,87 @@
+diff --git a/nmake.opt b/nmake.opt
+index e68f65a..d407c1f 100644
+--- a/nmake.opt
++++ b/nmake.opt
+@@ -226,9 +226,9 @@ INCLUDE_OGR_FRMTS = YES
+ 
+ # Enable all GNM formats?  Comment out to disable
+ # gnm formats.
+-!IFNDEF INCLUDE_GNM_FRMTS
+-INCLUDE_GNM_FRMTS = YES
+-!ENDIF
++# !IFNDEF INCLUDE_GNM_FRMTS
++# INCLUDE_GNM_FRMTS = YES
++# !ENDIF
+ 
+ # To be enabled defined to point to setargv.obj from the Visual C++ directory,
+ # when you want the utility programs to be able to expand wildcards. 
+@@ -247,15 +247,15 @@ INCLUDE_GNM_FRMTS = YES
+ #LIBICONV_CFLAGS = -DICONV_CONST=const
+ 
+ # Comment out the following to disable BSB support.
+-!IFNDEF BSB_SUPPORTED
+-BSB_SUPPORTED = 1
+-!ENDIF
++# !IFNDEF BSB_SUPPORTED
++# BSB_SUPPORTED = 1
++# !ENDIF
+ 
+ # Comment out the following to disable ODBC support.
+ 
+-!IFNDEF ODBC_SUPPORTED
+-ODBC_SUPPORTED = 1
+-!ENDIF
++# !IFNDEF ODBC_SUPPORTED
++# ODBC_SUPPORTED = 1
++# !ENDIF
+ 
+ # Uncomment out the following to enable plugin with SQL Native Client support for MSSQL Bulk Copy.
+ #SQLNCLI_VERSION = 11
+@@ -276,9 +276,9 @@ JPEG_SUPPORTED = 1
+ !ENDIF
+ 
+ # This will enable 12bit libjpeg - use only with internal jpeg builds.
+-!IFNDEF JPEG12_SUPPORTED
+-JPEG12_SUPPORTED = 1
+-!ENDIF
++# !IFNDEF JPEG12_SUPPORTED
++# JPEG12_SUPPORTED = 1
++# !ENDIF
+ 
+ #if using an external jpeg library uncomment the following lines
+ #JPEG_EXTERNAL_LIB = 1
+@@ -433,7 +433,7 @@ JPEG12_SUPPORTED = 1
+ #KAKLIB = $(KAKDIR)\lib_x64\kdu_v79R.lib 	$(KAKDIR)\lib_x64\kdu_a79R.lib
+ #KAKSRC = $(KAKDIR)\v7_9_1-01156C
+ #KAKOBJDIR =  $(KAKDIR)\v7_generated_x86
+-KAKADU_7_5_OR_LATER = YES
++# KAKADU_7_5_OR_LATER = YES
+ #JP2KAK_PLUGIN = YES
+ 
+ # Uncomment the following and update to enable NCSA HDF Release 4 support.
+@@ -536,7 +536,7 @@ INGRES_LIB = "$(INGRES_HOME)\lib\iilibapi.lib" \
+ #FITS_LIB =	c:\dev32\usr\lib\cfitsio.lib
+ 
+ # Comment out to disable GRIB support.
+-GRIB_SETTING=yes
++# GRIB_SETTING=yes
+ 
+ # Uncomment the following to enable NetCDF format.
+ #NETCDF_PLUGIN = NO
+@@ -565,11 +565,11 @@ GRIB_SETTING=yes
+ # Uncomment the following if you prefer to build OCI support as a plugin.
+ #OCI_PLUGIN = YES
+ 
+-!IFDEF ORACLE_HOME
+-OCI_LIB =	$(ORACLE_HOME)\oci\lib\msvc\ociw32.lib \
+-		$(ORACLE_HOME)\oci\lib\msvc\oci.lib
+-OCI_INCLUDE =	-I$(ORACLE_HOME)\oci\include
+-!ENDIF
++# !IFDEF ORACLE_HOME
++# OCI_LIB =	$(ORACLE_HOME)\oci\lib\msvc\ociw32.lib \
++# 		$(ORACLE_HOME)\oci\lib\msvc\oci.lib
++# OCI_INCLUDE =	-I$(ORACLE_HOME)\oci\include
++# !ENDIF
+ 
+ #SDE_ENABLED = YES
+ #SDE_VERSION=91
